@@ -1,5 +1,6 @@
 package recfun
 
+
 object RecFun extends RecFunInterface {
 
   def main(args: Array[String]): Unit = {
@@ -20,7 +21,17 @@ object RecFun extends RecFunInterface {
   /**
    * Exercise 2
    */
-  def balance(chars: List[Char]): Boolean = ???
+
+  def _balance(chars: List[Char], parensStack: List[Boolean]): List[Boolean] =
+    if (chars.isEmpty) parensStack
+    else if (chars.head == '(') _balance(chars.tail, List(true).concat(parensStack))
+    else if (chars.head == ')')
+      if (parensStack.isEmpty)
+        List(false) else _balance(chars.tail, parensStack.tail)
+    else _balance(chars.tail, parensStack)
+
+
+  def balance(chars: List[Char]): Boolean = _balance(chars, List[Boolean]()).isEmpty
 
   /**
    * Exercise 3
