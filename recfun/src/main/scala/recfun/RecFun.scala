@@ -22,16 +22,16 @@ object RecFun extends RecFunInterface {
    * Exercise 2
    */
 
-  def _balance(chars: List[Char], parensStack: List[Boolean]): List[Boolean] =
-    if (chars.isEmpty) parensStack
+  def _balance(chars: List[Char], parensStack: List[Boolean]): Boolean =
+    if (chars.isEmpty) parensStack.isEmpty
     else if (chars.head == '(') _balance(chars.tail, List(true).concat(parensStack))
     else if (chars.head == ')')
-      if (parensStack.isEmpty)
-        List(false) else _balance(chars.tail, parensStack.tail)
+      !parensStack.isEmpty &&
+        _balance(chars.tail, parensStack.tail)
     else _balance(chars.tail, parensStack)
 
 
-  def balance(chars: List[Char]): Boolean = _balance(chars, List[Boolean]()).isEmpty
+  def balance(chars: List[Char]): Boolean = _balance(chars, List[Boolean]())
 
   /**
    * Exercise 3
