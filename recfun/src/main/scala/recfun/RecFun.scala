@@ -21,6 +21,7 @@ object RecFun extends RecFunInterface {
   /**
    * Exercise 2
    */
+  def balance(chars: List[Char]): Boolean = _balance(chars, List[Boolean]())
 
   def _balance(chars: List[Char], parensStack: List[Boolean]): Boolean =
     if (chars.isEmpty) parensStack.isEmpty
@@ -30,11 +31,15 @@ object RecFun extends RecFunInterface {
         _balance(chars.tail, parensStack.tail)
     else _balance(chars.tail, parensStack)
 
-
-  def balance(chars: List[Char]): Boolean = _balance(chars, List[Boolean]())
-
   /**
    * Exercise 3
+   * Help:
+   * https://www.youtube.com/watch?v=DJ4a7cmjZY0&ab_channel=BackToBackSWE
+   * https://www.geeksforgeeks.org/coin-change-dp-7/
    */
-  def countChange(money: Int, coins: List[Int]): Int = ???
+  def countChange(money: Int, coins: List[Int]): Int = if (money == 0) 1
+  else if (coins.isEmpty) 0
+  else if (money < 0) 0
+  else countChange(money, coins.tail) + countChange(money - coins.head, coins)
+
 }
