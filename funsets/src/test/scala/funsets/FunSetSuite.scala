@@ -121,6 +121,18 @@ class FunSetSuite {
 
     }
   }
+  @Test def `exists set`: Unit = {
+    new TestSets {
+      val s = union(union(union(s1, s2), s3), s34)
+      assert(exists(s, (x) => x > 1))
+      assert(exists(s, (x) => x == 1))
+      assert(exists(s, (x) => x == 34))
+      assert(exists(s, (x) => x < 34))
+      assert(!exists(s, (x) => x > 34))
+      assert(!exists(s, (x) => x == 340))
+
+    }
+  }
 
 
   @Rule def individualTestTimeout = new org.junit.rules.Timeout(10 * 1000)

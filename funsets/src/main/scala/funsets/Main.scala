@@ -26,4 +26,9 @@ object Main extends App {
   println(forall(s, (x) => x > 0))
   println(forall(s, (x) => x > -99))
 
+  println(exists(s, (x) => x > 0))
+  println(exists(s, (x) => x > -99))
+  println(exists(s, (x) => x == -34))
+  println(exists(s, (x) => x < -99))
+
 }
