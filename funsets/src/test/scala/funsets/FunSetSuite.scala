@@ -94,6 +94,19 @@ class FunSetSuite {
     }
   }
 
+  @Test def `filter set`: Unit = {
+    new TestSets {
+      val s = union(union(s1,s2),s3)
+      def p = (x:Int) => x > 1
+      val res = filter(s,p)
+      assert(contains(res, 3), "filter positive")
+      assert(contains(res, 2), "filter negative negative")
+      assert(!contains(res, 1), "filter negative negative")
+      assert(!contains(res, 45), "filter negative negative")
+
+    }
+  }
+
 
   @Rule def individualTestTimeout = new org.junit.rules.Timeout(10 * 1000)
 }
