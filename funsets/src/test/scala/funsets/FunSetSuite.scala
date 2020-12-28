@@ -75,6 +75,24 @@ class FunSetSuite {
     }
   }
 
+  @Test def `intersect contains intersecting elements of each set`: Unit = {
+    new TestSets {
+      val sa = intersect(s1, s2)
+      assert(!contains(sa, 1), "Intersect 1,2")
+      val sb = intersect(s1, s1)
+      assert(contains(sb, 1), "Intersect 1,1")
+    }
+  }
+
+  @Test def `diff contains diff elements of each set`: Unit = {
+    new TestSets {
+      val sa = union(s1, s2)
+      val sb = union(s2, s3)
+      val s = diff(sa,sb)
+      assert(contains(s, 1), "Diff positive")
+      assert(!contains(s, 2), "Diff negative")
+    }
+  }
 
 
   @Rule def individualTestTimeout = new org.junit.rules.Timeout(10 * 1000)
