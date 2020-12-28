@@ -18,7 +18,7 @@ trait FunSets extends FunSetsInterface {
   /**
    * Returns the set of the one given element.
    */
-  def singletonSet(elem: Int): FunSet = (x:Int) => x == elem
+  def singletonSet(elem: Int): FunSet = (x: Int) => x == elem
 
 
   /**
@@ -31,7 +31,7 @@ trait FunSets extends FunSetsInterface {
    * Returns the intersection of the two given sets,
    * the set of all elements that are both in `s` and `t`.
    */
-  def intersect(s: FunSet, t: FunSet): FunSet =  (x: Int) => contains(s, x) && contains(t, x)
+  def intersect(s: FunSet, t: FunSet): FunSet = (x: Int) => contains(s, x) && contains(t, x)
 
   /**
    * Returns the difference of the two given sets,
@@ -42,7 +42,7 @@ trait FunSets extends FunSetsInterface {
   /**
    * Returns the subset of `s` for which `p` holds.
    */
-  def filter(s: FunSet, p: Int => Boolean): FunSet = (x:Int) => contains(s,x) && p(x)
+  def filter(s: FunSet, p: Int => Boolean): FunSet = (x: Int) => contains(s, x) && p(x)
 
 
   /**
@@ -55,11 +55,12 @@ trait FunSets extends FunSetsInterface {
    */
   def forall(s: FunSet, p: Int => Boolean): Boolean = {
     def iter(a: Int): Boolean = {
-      if (???) ???
-      else if (???) ???
-      else iter(???)
+      if (a > bound) true
+      else if (contains(s,a) && !p(a) ) false
+      else iter(a + 1)
     }
-    iter(???)
+
+    iter(-bound)
   }
 
   /**
