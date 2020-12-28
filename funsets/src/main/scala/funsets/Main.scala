@@ -31,4 +31,6 @@ object Main extends App {
   println(exists(s, (x) => x == -34))
   println(exists(s, (x) => x < -99))
 
+  printSet(map(s, x => x * 2))
+
 }

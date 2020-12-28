@@ -121,6 +121,7 @@ class FunSetSuite {
 
     }
   }
+
   @Test def `exists set`: Unit = {
     new TestSets {
       val s = union(union(union(s1, s2), s3), s34)
@@ -131,6 +132,19 @@ class FunSetSuite {
       assert(!exists(s, (x) => x > 34))
       assert(!exists(s, (x) => x == 340))
 
+    }
+  }
+
+
+  @Test def `map set`: Unit = {
+    new TestSets {
+      val s = union(union(union(s1, s2), s3), s34)
+      val t = map(s, x => x * 2)
+      assert(contains(t, 1 * 2))
+      assert(contains(t, 2 * 2))
+      assert(contains(t, 3 * 2))
+      assert(contains(t, 34 * 2))
+      assert(!contains(t, 55))
     }
   }
 
