@@ -53,6 +53,11 @@ class TweetSetSuite {
       assertEquals(4, size(set1.union(set5)))
     }
 
+  @Test def `mostRetweet: with non empty set`: Unit =
+    new TestSets {
+      assertEquals(20, set5.mostRetweeted.retweets)
+    }
+
   @Test def `descending: set5`: Unit =
     new TestSets {
       val trends = set5.descendingByRetweet

@@ -2,6 +2,8 @@ package objsets
 
 import TweetReader._
 
+import java.util.NoSuchElementException
+
 /**
  * A class to represent tweets.
  */
@@ -65,7 +67,7 @@ abstract class TweetSet extends TweetSetInterface {
    * Question: Should we implment this method here, or should it remain abstract
    * and be implemented in the subclasses?
    */
-  def mostRetweeted: Tweet = ???
+  def mostRetweeted: Tweet
 
   /**
    * Returns a list containing all tweets of this set, sorted by retweet count
@@ -121,7 +123,9 @@ class Empty extends TweetSet {
 
   def foreach(f: Tweet => Unit): Unit = ()
 
-  override def union(that: TweetSet): TweetSet = that
+  def union(that: TweetSet): TweetSet = that
+
+  def mostRetweeted: Tweet = throw new java.util.NoSuchElementException("Empty set")
 }
 
 class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
@@ -157,8 +161,19 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
     right.foreach(f)
   }
 
-  override def union(that: TweetSet): TweetSet =
+  def union(that: TweetSet): TweetSet =
     left.union(right).union(that).incl(elem)
+
+  def mostRetweeted: Tweet = {
+    var maxRetweets = 0
+    var rv = new Tweet(elem.user, elem.text, elem.retweets)
+
+    remove(elem).foreach(t => if (t.retweets > maxRetweets) {
+      maxRetweets = t.retweets
+      rv = new Tweet(t.user, t.text, t.retweets)
+    })
+    rv
+  }
 }
 
 trait TweetList {
