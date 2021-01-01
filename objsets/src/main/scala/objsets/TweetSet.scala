@@ -177,7 +177,7 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 
   def isEmpty = false
 
-
+  // TODO: make this more readable
   def mostRetweeted: Tweet = {
 
     lazy val leftMost = left.mostRetweeted
@@ -194,7 +194,10 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
       if (leftMost.retweets > elem.retweets) leftMost
       else elem
     // both children
-    else if (leftMost.retweets > rightMost.retweets) leftMost
+    else if (leftMost.retweets > rightMost.retweets)
+      if (elem.retweets > leftMost.retweets) elem
+      else leftMost
+    else if (elem.retweets > rightMost.retweets) elem
     else rightMost
   }
 
@@ -253,5 +256,6 @@ object Main extends App {
   // Print the trending tweets
   //      GoogleVsApple.googleTweets foreach println
   //    GoogleVsApple.appleTweets foreach println
+  //  GoogleVsApple.trending foreach (t => println(t.retweets))
   GoogleVsApple.trending foreach println
 }
