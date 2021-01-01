@@ -106,6 +106,8 @@ abstract class TweetSet extends TweetSetInterface {
    * This method takes a function and applies it to every element in the set.
    */
   def foreach(f: Tweet => Unit): Unit
+
+  def isEmpty: Boolean
 }
 
 class Empty extends TweetSet {
@@ -128,6 +130,8 @@ class Empty extends TweetSet {
   def mostRetweeted: Tweet = throw new java.util.NoSuchElementException("Empty set")
 
   def descendingByRetweet: TweetList = Nil
+
+  def isEmpty = true
 }
 
 class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
@@ -163,23 +167,29 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
     right.foreach(f)
   }
 
+  def tweet: Tweet = elem
+
   //  TODO: study why the ordering matters
   //  https://www.coursera.org/learn/progfun1/discussions/threads/K3WvcbHpEembCxKg8Amuug/replies/SY6dB7HpEem9FQp29_7a-A
   //  https://www.coursera.org/learn/progfun1/discussions/threads/K3WvcbHpEembCxKg8Amuug/replies/R5iY3rHpEemyRBKvu4CimA
   def union(that: TweetSet): TweetSet =
     left union (right union (that incl elem))
 
-  //  TODO: is this allowed in FP 😶
-  def mostRetweeted: Tweet = {
-    var maxRetweets = 0
-    var rv = new Tweet(elem.user, elem.text, elem.retweets)
+  def isEmpty = false
 
-    remove(elem).foreach(t =>
-      if (t.retweets > maxRetweets) {
-        maxRetweets = t.retweets
-        rv = new Tweet(t.user, t.text, t.retweets)
-      })
-    rv
+
+  //  TODO: is this allowed in FP 😶
+  //  No: sbt will not allow submit with `var`
+  def mostRetweeted: Tweet = {
+    if (left.isEmpty && right.isEmpty) elem
+    else if (left.isEmpty)
+      if (right.mostRetweeted.retweets > elem.retweets) remove(elem).mostRetweeted
+      else remove(right.mostRetweeted).mostRetweeted
+    else if (right.isEmpty)
+      if (left.mostRetweeted.retweets > elem.retweets) remove(elem).mostRetweeted
+      else remove(left.mostRetweeted).mostRetweeted
+    else if (left.mostRetweeted.retweets > right.mostRetweeted.retweets) remove(left.mostRetweeted).mostRetweeted
+    else remove(right.mostRetweeted).mostRetweeted
   }
 
   def descendingByRetweet: TweetList =
