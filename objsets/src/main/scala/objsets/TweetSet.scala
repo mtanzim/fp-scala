@@ -163,8 +163,11 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
     right.foreach(f)
   }
 
+  //  TODO: study why the ordering matters
+  //  https://www.coursera.org/learn/progfun1/discussions/threads/K3WvcbHpEembCxKg8Amuug/replies/SY6dB7HpEem9FQp29_7a-A
+  //  https://www.coursera.org/learn/progfun1/discussions/threads/K3WvcbHpEembCxKg8Amuug/replies/R5iY3rHpEemyRBKvu4CimA
   def union(that: TweetSet): TweetSet =
-    left.union(right).union(that).incl(elem)
+    left union (right union (that incl elem))
 
   //  TODO: is this allowed in FP 😶
   def mostRetweeted: Tweet = {
@@ -180,7 +183,7 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
   }
 
   def descendingByRetweet: TweetList =
-    new Cons(mostRetweeted, remove(elem).descendingByRetweet)
+    new Cons(mostRetweeted, remove(mostRetweeted).descendingByRetweet)
 }
 
 
@@ -215,17 +218,24 @@ object GoogleVsApple {
   val google = List("android", "Android", "galaxy", "Galaxy", "nexus", "Nexus")
   val apple = List("ios", "iOS", "iphone", "iPhone", "ipad", "iPad")
 
-  lazy val googleTweets: TweetSet = ???
-  lazy val appleTweets: TweetSet = ???
+  def filterByList(list: List[String]) = allTweets.filter(t => list.exists(l => t.text.contains(l)))
+
+  lazy val googleTweets: TweetSet = filterByList(google)
+  lazy val appleTweets: TweetSet = filterByList(apple)
+  lazy val both = googleTweets union appleTweets
 
   /**
    * A list of all tweets mentioning a keyword from either apple or google,
    * sorted by the number of retweets.
    */
-  lazy val trending: TweetList = ???
+  lazy val trending: TweetList = both.descendingByRetweet
 }
 
 object Main extends App {
+  //  println("TEST")
+  //  allTweets foreach println
   // Print the trending tweets
+  //      GoogleVsApple.googleTweets foreach println
+  //    GoogleVsApple.appleTweets foreach println
   GoogleVsApple.trending foreach println
 }
