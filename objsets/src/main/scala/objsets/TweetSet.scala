@@ -178,18 +178,24 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
   def isEmpty = false
 
 
-  //  TODO: is this allowed in FP 😶
-  //  No: sbt will not allow submit with `var`
   def mostRetweeted: Tweet = {
+
+    lazy val leftMost = left.mostRetweeted
+    lazy val rightMost = right.mostRetweeted
+
+    // No children
     if (left.isEmpty && right.isEmpty) elem
+    // Only right child
     else if (left.isEmpty)
-      if (right.mostRetweeted.retweets > elem.retweets) remove(elem).mostRetweeted
-      else remove(right.mostRetweeted).mostRetweeted
+      if (rightMost.retweets > elem.retweets) rightMost
+      else elem
+    // Only left child
     else if (right.isEmpty)
-      if (left.mostRetweeted.retweets > elem.retweets) remove(elem).mostRetweeted
-      else remove(left.mostRetweeted).mostRetweeted
-    else if (left.mostRetweeted.retweets > right.mostRetweeted.retweets) remove(left.mostRetweeted).mostRetweeted
-    else remove(right.mostRetweeted).mostRetweeted
+      if (leftMost.retweets > elem.retweets) leftMost
+      else elem
+    // both children
+    else if (leftMost.retweets > rightMost.retweets) leftMost
+    else rightMost
   }
 
   def descendingByRetweet: TweetList =
