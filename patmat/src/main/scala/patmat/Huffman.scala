@@ -72,7 +72,21 @@ trait Huffman extends HuffmanInterface {
    * println("integer is  : "+ theInt)
    * }
    */
-  def times(chars: List[Char]): List[(Char, Int)] = ???
+  def times(chars: List[Char]): List[(Char, Int)] = {
+
+    // O(n^2) performance acceptable? Can we use a hashmap? BST? alt algo?
+    def _times(chars: List[Char], pairs: List[(Char, Int)]): List[(Char, Int)] =
+      chars match {
+        case Nil => pairs
+        case head :: tail => pairs.find(p => p._1 == head) match {
+          case None => _times(tail, (head, 1) :: pairs)
+          case Some((c, n)) => _times(tail, (c, n + 1) :: pairs.filter(p => p._1 != c))
+        }
+      }
+
+    _times(chars, List())
+
+  }
 
   /**
    * Returns a list of `Leaf` nodes for a given frequency table `freqs`.

@@ -30,6 +30,16 @@ class HuffmanSuite {
 
     }
 
+  @Test def `test times`: Unit =
+    new TestTrees {
+      assertEquals(('b', 1) :: ('a', 1) :: Nil, times(List('a', 'b')))
+      // TODO: is this deterministic?
+      assertEquals(('b', 2) :: ('c', 1) :: ('a', 2) :: Nil, times(List('a', 'b', 'a', 'c', 'b')))
+      assertEquals(('b', 2) :: Nil, times(List('b', 'b')))
+      assertEquals(List(), times(List()))
+      assertEquals(List(('c', 1)), times(List('c')))
+    }
+
   @Test def `string2chars hello world`: Unit =
     assertEquals(List('h', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd'), string2Chars("hello, world"))
 
