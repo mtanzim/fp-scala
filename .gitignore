@@ -1,3 +1,5 @@
 *.class
 lib_managed/
 target/
+.idea/
+.DS_Store/
