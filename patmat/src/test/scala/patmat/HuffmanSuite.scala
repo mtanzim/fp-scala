@@ -49,7 +49,7 @@ class HuffmanSuite {
     assertEquals(List(Leaf('x', 3), Leaf('t', 23), Leaf('e', 45), Leaf('m', 99)), makeOrderedLeafList(List(('e', 45), ('t', 23), ('x', 3), ('m', 99))))
   }
 
-  @Test def `test singleton`: Unit = new TestTrees {
+  @Test def `test Tree singleton`: Unit = new TestTrees {
     assertEquals(true, singleton(List(t1)))
     assertEquals(false, singleton(t1 :: List(t1)))
 
