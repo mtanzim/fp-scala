@@ -44,9 +44,16 @@ class HuffmanSuite {
     assertEquals(List('h', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd'), string2Chars("hello, world"))
 
 
-  @Test def `make ordered leaf list for some frequency table (15pts)`: Unit =
+  @Test def `make ordered leaf list for some frequency table (15pts)`: Unit = new TestTrees {
     assertEquals(List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 3)), makeOrderedLeafList(List(('t', 2), ('e', 1), ('x', 3))))
-    assertEquals(List(Leaf('x', 3), Leaf('t', 23), Leaf('e', 45)), makeOrderedLeafList(List(('e', 45), ('t', 23), ('x', 3), ('m', 99))))
+    assertEquals(List(Leaf('x', 3), Leaf('t', 23), Leaf('e', 45), Leaf('m', 99)), makeOrderedLeafList(List(('e', 45), ('t', 23), ('x', 3), ('m', 99))))
+  }
+
+  @Test def `test singleton`: Unit = new TestTrees {
+    assertEquals(true, singleton(List(t1)))
+    assertEquals(false, singleton(t1 :: List(t1)))
+
+  }
 
 
   @Test def `combine of some leaf list (15pts)`: Unit = {

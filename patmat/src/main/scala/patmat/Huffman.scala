@@ -100,27 +100,19 @@ trait Huffman extends HuffmanInterface {
     def _makeList(_freqs: List[(Char, Int)], curLeafList: List[Leaf]): List[Leaf] =
       _freqs match {
         case Nil => curLeafList
-        case (c, w) :: tail => {
-          curLeafList match {
-            case Nil => _makeList(tail, List(Leaf(c, w)))
-            case headLeaf :: neckLeaf :: tailLeaf =>
-              if (w > headLeaf.weight && w < neckLeaf.weight)
-                _makeList(tail, headLeaf :: Leaf(c, w) :: neckLeaf :: tailLeaf)
-              else _makeList(tail, headLeaf :: _makeList((c, w) :: tail, neckLeaf :: tailLeaf))
-            case neckLeaf :: tailLeaf =>
-              if (w > neckLeaf.weight) _makeList(tail, neckLeaf :: Leaf(c, w) :: tailLeaf)
-              else _makeList(tail, Leaf(c, w) :: neckLeaf :: tailLeaf)
-          }
-        }
+        case (c, w) :: tail => _makeList(tail, Leaf(c, w) :: curLeafList)
       }
 
-    _makeList(freqs, List())
+    _makeList(freqs, List()).sortWith((prev, cur) => prev.weight < cur.weight)
   }
 
   /**
    * Checks whether the list `trees` contains only one single code tree.
    */
-  def singleton(trees: List[CodeTree]): Boolean = ???
+  def singleton(trees: List[CodeTree]): Boolean = trees match {
+    case head :: Nil => true
+    case _ => false
+  }
 
   /**
    * The parameter `trees` of this function is a list of code trees ordered
