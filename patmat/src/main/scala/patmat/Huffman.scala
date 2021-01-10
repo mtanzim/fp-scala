@@ -95,7 +95,27 @@ trait Huffman extends HuffmanInterface {
    * head of the list should have the smallest weight), where the weight
    * of a leaf is the frequency of the character.
    */
-  def makeOrderedLeafList(freqs: List[(Char, Int)]): List[Leaf] = ???
+  def makeOrderedLeafList(freqs: List[(Char, Int)]): List[Leaf] = {
+
+    def _makeList(_freqs: List[(Char, Int)], curLeafList: List[Leaf]): List[Leaf] =
+      _freqs match {
+        case Nil => curLeafList
+        case (c, w) :: tail => {
+          curLeafList match {
+            case Nil => _makeList(tail, List(Leaf(c, w)))
+            case headLeaf :: neckLeaf :: tailLeaf =>
+              if (w > headLeaf.weight && w < neckLeaf.weight)
+                _makeList(tail, headLeaf :: Leaf(c, w) :: neckLeaf :: tailLeaf)
+              else _makeList(tail, headLeaf :: _makeList((c, w) :: tail, neckLeaf :: tailLeaf))
+            case neckLeaf :: tailLeaf =>
+              if (w > neckLeaf.weight) _makeList(tail, neckLeaf :: Leaf(c, w) :: tailLeaf)
+              else _makeList(tail, Leaf(c, w) :: neckLeaf :: tailLeaf)
+          }
+        }
+      }
+
+    _makeList(freqs, List())
+  }
 
   /**
    * Checks whether the list `trees` contains only one single code tree.

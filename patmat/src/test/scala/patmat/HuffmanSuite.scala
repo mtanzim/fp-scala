@@ -46,6 +46,7 @@ class HuffmanSuite {
 
   @Test def `make ordered leaf list for some frequency table (15pts)`: Unit =
     assertEquals(List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 3)), makeOrderedLeafList(List(('t', 2), ('e', 1), ('x', 3))))
+    assertEquals(List(Leaf('x', 3), Leaf('t', 23), Leaf('e', 45)), makeOrderedLeafList(List(('e', 45), ('t', 23), ('x', 3), ('m', 99))))
 
 
   @Test def `combine of some leaf list (15pts)`: Unit = {
