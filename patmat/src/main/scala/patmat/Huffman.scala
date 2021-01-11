@@ -126,7 +126,10 @@ trait Huffman extends HuffmanInterface {
    * If `trees` is a list of less than two elements, that list should be returned
    * unchanged.
    */
-  def combine(trees: List[CodeTree]): List[CodeTree] = ???
+  def combine(trees: List[CodeTree]): List[CodeTree] = trees match {
+    case Leaf(ch, wh) :: Leaf(cn, wn) :: tail => Fork(Leaf(ch, wh), Leaf(cn, wn), List(ch, cn), wh + wn) :: tail
+    case _ => throw new IllegalArgumentException("Cannot operate on list with less than 2 leaves")
+  }
 
   /**
    * This function will be called in the following way:
