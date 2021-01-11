@@ -43,6 +43,9 @@ class HuffmanSuite {
   @Test def `string2chars hello world`: Unit =
     assertEquals(List('h', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd'), string2Chars("hello, world"))
 
+  @Test def `make code tree`: Unit =
+    assertEquals(Leaf('c', 32), createCodeTree(string2Chars("Hello World")))
+
 
   @Test def `make ordered leaf list for some frequency table (15pts)`: Unit = new TestTrees {
     assertEquals(List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 3)), makeOrderedLeafList(List(('t', 2), ('e', 1), ('x', 3))))
