@@ -209,27 +209,19 @@ trait Huffman extends HuffmanInterface {
    * into a sequence of bits.
    */
   def encode(tree: CodeTree)(text: List[Char]): List[Bit] = {
-    def traverse(text: List[Char], bits: List[Bit]): List[Bit] = {
-      if (text.isEmpty) bits
-      else {
-        tree match {
-          case Leaf(c, _) => bits
-          case Fork(left, right, _, _) => left match {
-            case Leaf(c,_) => if (text.head == c) bits.::(0) else bits
-            case Fork(_, _, chars, _) =>
-              if (chars.contains(text.head)) traverse(text.tail, bits.::(1))
-              else right match {
-                case Fork(_, _, charsRight, _) =>
-                  if (charsRight.contains(text.head)) traverse(text.tail, bits.::(0))
-                  else bits
-              }
-
-          }
+    def traverse(innerTree: CodeTree, text: List[Char]): List[Bit] = {
+      text match {
+        case Nil => Nil
+        case head :: tail => innerTree match {
+          case Leaf(_, _) => traverse(tree, tail)
+          case Fork(left, right, _, _) =>
+            if (chars(left).contains(head)) 0 :: traverse(left, text)
+            else 1 :: traverse(right, text)
         }
       }
     }
 
-    traverse(text, List[Bit]())
+    traverse(tree, text)
 
   }
 
