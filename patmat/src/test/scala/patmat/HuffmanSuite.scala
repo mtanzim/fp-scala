@@ -43,8 +43,8 @@ class HuffmanSuite {
   @Test def `string2chars hello world`: Unit =
     assertEquals(List('h', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd'), string2Chars("hello, world"))
 
-  @Test def `make code tree`: Unit =
-    assertEquals(Leaf('c', 32), createCodeTree(string2Chars("Hello World")))
+  //  @Test def `make code tree`: Unit =
+  //    assertEquals(Leaf('c', 32), createCodeTree(string2Chars("Hello World")))
 
 
   @Test def `make ordered leaf list for some frequency table (15pts)`: Unit = new TestTrees {
@@ -63,6 +63,10 @@ class HuffmanSuite {
     val leaflist = List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 4))
     assertEquals(List(Fork(Leaf('e', 1), Leaf('t', 2), List('e', 't'), 3), Leaf('x', 4)), combine(leaflist))
   }
+
+
+  @Test def `decode test`: Unit =
+    assertEquals(string2Chars("huffmanestcool"), decodedSecret)
 
 
   @Test def `decode and encode a very short text should be identity (10pts)`: Unit =
