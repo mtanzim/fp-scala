@@ -275,7 +275,16 @@ trait Huffman extends HuffmanInterface {
    * To speed up the encoding process, it first converts the code tree to a code table
    * and then uses it to perform the actual encoding.
    */
-  def quickEncode(tree: CodeTree)(text: List[Char]): List[Bit] = ???
+  def quickEncode(tree: CodeTree)(text: List[Char]): List[Bit] = {
+    val ct = convert(tree)
+
+    def traverse(curText: List[Char]): List[Bit] = {
+      if (curText.isEmpty) List[Bit]() else
+        codeBits(ct)(curText.head).concat(traverse(curText.tail))
+    }
+
+    traverse(text)
+  }
 }
 
 object Huffman extends Huffman
