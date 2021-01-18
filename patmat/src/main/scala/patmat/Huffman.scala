@@ -278,10 +278,9 @@ trait Huffman extends HuffmanInterface {
   def quickEncode(tree: CodeTree)(text: List[Char]): List[Bit] = {
     val ct = convert(tree)
 
-    def traverse(curText: List[Char]): List[Bit] = {
-      if (curText.isEmpty) List[Bit]() else
-        codeBits(ct)(curText.head).concat(traverse(curText.tail))
-    }
+    def traverse(curText: List[Char]): List[Bit] =
+      if (curText.isEmpty) List[Bit]()
+      else codeBits(ct)(curText.head).concat(traverse(curText.tail))
 
     traverse(text)
   }
