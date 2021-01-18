@@ -40,6 +40,12 @@ class HuffmanSuite {
       assertEquals(List(('c', 1)), times(List('c')))
     }
 
+  @Test def `test codeTable`: Unit =
+    new TestTrees {
+      assertEquals(List(('a', List(0)), ('b', List(1))), convert(t1))
+      assertEquals(List(('a',List(0, 0)), ('b',List(1, 0)), ('d',List(1))), convert(t2))
+    }
+
   @Test def `string2chars hello world`: Unit =
     assertEquals(List('h', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd'), string2Chars("hello, world"))
 

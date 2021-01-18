@@ -246,12 +246,12 @@ trait Huffman extends HuffmanInterface {
   def convert(tree: CodeTree): CodeTable = {
 
     def traverse(curBits: List[Bit], innerTree: CodeTree): CodeTable =
-      tree match {
+      innerTree match {
         case Leaf(c, _) => (c, curBits) :: Nil
         case Fork(left, right, _, _) => {
-          val left = traverse(0 :: curBits, left)
-          val right = traverse(1 :: curBits, right)
-          mergeCodeTables(left, right)
+          val leftTable = traverse(0 :: curBits, left)
+          val rightTable = traverse(1 :: curBits, right)
+          mergeCodeTables(leftTable, rightTable)
         }
       }
 
@@ -260,7 +260,7 @@ trait Huffman extends HuffmanInterface {
 
   /**
    * This function takes two code tables and merges them into one. Depending on how you
-   * use it in the `convert` method above, this merge method might also do some transformations
+   * use it in the `convert` method above, this mnerge method might also do some transformations
    * on the two parameter code tables.
    */
   def mergeCodeTables(a: CodeTable, b: CodeTable): CodeTable = a.concat(b)
