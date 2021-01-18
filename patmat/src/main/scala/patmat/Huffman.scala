@@ -253,8 +253,8 @@ trait Huffman extends HuffmanInterface {
       innerTree match {
         case Leaf(c, _) => (c, curBits) :: Nil
         case Fork(left, right, _, _) => {
-          val leftTable = traverse(0 :: curBits, left)
-          val rightTable = traverse(1 :: curBits, right)
+          val leftTable = traverse(curBits.concat(List(0)), left)
+          val rightTable = traverse(curBits.concat(List(1)), right)
           mergeCodeTables(leftTable, rightTable)
         }
       }

@@ -43,7 +43,7 @@ class HuffmanSuite {
   @Test def `test codeTable`: Unit =
     new TestTrees {
       assertEquals(List(('a', List(0)), ('b', List(1))), convert(t1))
-      assertEquals(List(('a', List(0, 0)), ('b', List(1, 0)), ('d', List(1))), convert(t2))
+      assertEquals(List(('a', List(0, 0)), ('b', List(0, 1)), ('d', List(1))), convert(t2))
     }
 
   @Test def `test codeBits`: Unit =
@@ -54,7 +54,7 @@ class HuffmanSuite {
 
       val ct2 = convert(t2)
       assertEquals(List(0,0), codeBits(ct2)('a'))
-      assertEquals(List(1,0), codeBits(ct2)('b'))
+      assertEquals(List(0,1), codeBits(ct2)('b'))
       assertEquals(List(1), codeBits(ct2)('d'))
 
     }
