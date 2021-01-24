@@ -34,13 +34,18 @@ object Anagrams extends AnagramsInterface {
    * Note: you must use `groupBy` to implement this method!
    */
   def wordOccurrences(w: Word): Occurrences =
-    w.toList.map(c => c.toLower)
+    w.toList
+      .map(c => c.toLower)
       .groupBy(c => c)
       .toList
       .map(item => (item._1, item._2.length))
+      .sortWith((prev, cur) => prev._1 < cur._1)
 
   /** Converts a sentence into its character occurrence list. */
-  def sentenceOccurrences(s: Sentence): Occurrences = ???
+  def sentenceOccurrences(s: Sentence): Occurrences = {
+    val concatenatedWord = s.fold("")((acc, prev) => acc.concat(prev))
+    wordOccurrences(concatenatedWord)
+  }
 
   /** The `dictionaryByOccurrences` is a `Map` from different occurrences to a sequence of all
    * the words that have that occurrence count.
