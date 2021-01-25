@@ -1,8 +1,10 @@
 # fp-scala
 
-[Course](https://www.coursera.org/learn/progfun1)
+[Course](https://www.coursera.org/specializations/scala)
 
 ## Assignments
+
+### Course 1 - Functional Programming Principles in Scala
 
 - [Assignment 1 - Recursion](./recfun/src/main/scala/recfun/RecFun.scala)
 - [Assignment 2 - Sets with HOF](./funsets/src/main/scala/funsets/FunSets.scala)
