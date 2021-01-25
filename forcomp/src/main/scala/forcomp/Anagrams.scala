@@ -92,25 +92,30 @@ object Anagrams extends AnagramsInterface {
    * in the example above could have been displayed in some other order.
    */
   def combinations(occurrences: Occurrences): List[Occurrences] = {
-    val singles = (for {
+    val singles = for {
       (char, count) <- occurrences
       i <- 1 until count + 1
-    } yield (char, i))
-      .groupBy(item => item._1)
-      .toList
-      .map(item => item._2)
+    } yield (char, i)
 
-    println(singles)
+    def traverse(singles:List[(Char,Int)]):List[Occurrences] = {
+      if (singles.isEmpty) List(List())
+      else {
+        val combos = for {
+          x <- singles
+          y <- singles
+          if x._1 < y._1
+        } yield List(x,y)
 
-    val combos = for {
-      x <- singles.head
-      y <- singles.tail.head
-      if x._1 != y._1
-    } yield List(x,y)
+        combos.concat(traverse(singles.tail))
+      }
+    }
 
-    println(combos)
-    combos.concat(singles).concat(List())
+    val combinations = traverse(singles).concat(singles.map(s => List(s)))
 
+    println(combinations)
+
+
+    combinations
   }
 
   /** Subtracts occurrence list `y` from occurrence list `x`.
