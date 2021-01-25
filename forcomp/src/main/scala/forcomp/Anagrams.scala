@@ -97,24 +97,24 @@ object Anagrams extends AnagramsInterface {
       i <- 1 until count + 1
     } yield (char, i)
 
-    def traverse(singles:List[(Char,Int)]):List[Occurrences] = {
+    def traverse(singles: List[(Char, Int)]): List[Occurrences] = {
       if (singles.isEmpty) List(List())
       else {
         val combos = for {
-          x <- singles
-          y <- singles
-          if x._1 < y._1
-        } yield List(x,y)
-
-        combos.concat(traverse(singles.tail))
+          word <- singles
+          rest <- traverse(singles.filter(s => s._1 > word._1))
+        } yield word :: rest
+        combos
       }
     }
 
-    val combinations = traverse(singles).concat(singles.map(s => List(s)))
+    val singleCombos = singles.map(s => List(s))
+    val emptyList = List(List())
+    val combinations = traverse(singles).concat(singleCombos).concat(emptyList).distinct
 
-    println(combinations)
-
-
+//    for {
+//      c <- combinations
+//    } println(c)
     combinations
   }
 
