@@ -18,7 +18,7 @@ case class Fork(left: CodeTree, right: CodeTree, chars: List[Char], weight: Int)
 
 case class Leaf(char: Char, weight: Int) extends CodeTree
 
-/**
+/**quickEncode
  * Assignment 4: Huffman coding
  *
  */
