@@ -92,33 +92,48 @@ object Anagrams extends AnagramsInterface {
    * in the example above could have been displayed in some other order.
    */
 
-  //    TODO: optimize this
-  def combinations(occurrences: Occurrences): List[Occurrences] = {
-    val singles = for {
-      (char, count) <- occurrences
-      i <- 1 until count + 1
-    } yield (char, i)
+  //    TODO: review wrong answer
+  //  def combinations(occurrences: Occurrences): List[Occurrences] = {
+  //    val singles = for {
+  //      (char, count) <- occurrences
+  //      i <- 1 until count + 1
+  //    } yield (char, i)
+  //
+  //    def traverse(singles: List[(Char, Int)]): List[Occurrences] = {
+  //      if (singles.isEmpty) List(List())
+  //      else {
+  //        val combos = for {
+  //          word <- singles
+  //          rest <- traverse(singles.filter(s => s._1 > word._1))
+  //        } yield word :: rest
+  //        combos
+  //      }
+  //    }
+  //
+  //    val singleCombos = singles.map(s => List(s))
+  //    val emptyList = List(List())
+  //    val combinations = traverse(singles).concat(singleCombos).concat(emptyList).distinct
+  //
+  //    //        for {
+  //    //          c <- combinations
+  //    //        } println(c)
+  //    combinations
+  //  }
 
-    def traverse(singles: List[(Char, Int)]): List[Occurrences] = {
-      if (singles.isEmpty) List(List())
-      else {
-        val combos = for {
-          word <- singles
-          rest <- traverse(singles.filter(s => s._1 > word._1))
-        } yield word :: rest
-        combos
-      }
+
+  def combinations(occurrences: Occurrences): List[Occurrences] = occurrences match {
+    case List() => List(List())
+    case (char, count) :: tail => {
+      val combos = for {
+        i <- 0 to count
+        occ <- combinations(tail)
+      } yield (char, i) :: occ
+
+      combos.toList.map(lst => lst.filter((item) => item._2 != 0))
     }
 
-    val singleCombos = singles.map(s => List(s))
-    val emptyList = List(List())
-    val combinations = traverse(singles).concat(singleCombos).concat(emptyList).distinct
-
-    //    for {
-    //      c <- combinations
-    //    } println(c)
-    combinations
   }
+
 
   /** Subtracts occurrence list `y` from occurrence list `x`.
    *
@@ -133,7 +148,7 @@ object Anagrams extends AnagramsInterface {
   def subtract(x: Occurrences, y: Occurrences): Occurrences = {
     val yMap = y.toMap withDefaultValue (0)
     x.map(item => (item._1, item._2 - yMap(item._1)))
-      .filter(item => item._2 != 0)
+      .filter(item => item._2 > 0)
   }
 
   /** Returns a list of all anagram sentences of the given sentence.
@@ -176,7 +191,21 @@ object Anagrams extends AnagramsInterface {
    *
    * Note: There is only one anagram of an empty sentence.
    */
-  def sentenceAnagrams(sentence: Sentence): List[Sentence] = ???
+  def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
+
+    def traverse(occurrences: Occurrences): List[Sentence] = {
+      if (occurrences.isEmpty) List(List())
+      else for {
+        combos <- combinations(occurrences)
+        word <- dictionaryByOccurrences(combos)
+        rest <- traverse(subtract(occurrences, combos))
+      } yield word :: rest
+    }
+
+    val occs = sentenceOccurrences(sentence)
+    traverse(occs)
+
+  }
 }
 
 object Dictionary {
