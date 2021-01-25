@@ -91,6 +91,8 @@ object Anagrams extends AnagramsInterface {
    * Note that the order of the occurrence list subsets does not matter -- the subsets
    * in the example above could have been displayed in some other order.
    */
+
+  //    TODO: optimize this
   def combinations(occurrences: Occurrences): List[Occurrences] = {
     val singles = for {
       (char, count) <- occurrences
@@ -112,9 +114,9 @@ object Anagrams extends AnagramsInterface {
     val emptyList = List(List())
     val combinations = traverse(singles).concat(singleCombos).concat(emptyList).distinct
 
-//    for {
-//      c <- combinations
-//    } println(c)
+    //    for {
+    //      c <- combinations
+    //    } println(c)
     combinations
   }
 
@@ -128,7 +130,11 @@ object Anagrams extends AnagramsInterface {
    * Note: the resulting value is an occurrence - meaning it is sorted
    * and has no zero-entries.
    */
-  def subtract(x: Occurrences, y: Occurrences): Occurrences = ???
+  def subtract(x: Occurrences, y: Occurrences): Occurrences = {
+    val yMap = y.toMap withDefaultValue (0)
+    x.map(item => (item._1, item._2 - yMap(item._1)))
+      .filter(item => item._2 != 0)
+  }
 
   /** Returns a list of all anagram sentences of the given sentence.
    *
