@@ -43,7 +43,7 @@ object Anagrams extends AnagramsInterface {
 
   /** Converts a sentence into its character occurrence list. */
   def sentenceOccurrences(s: Sentence): Occurrences = {
-    val concatenatedWord = s.fold("")((acc, prev) => acc.concat(prev))
+    val concatenatedWord = s.fold("")((acc, cur) => acc.concat(cur))
     wordOccurrences(concatenatedWord)
   }
 
@@ -62,10 +62,12 @@ object Anagrams extends AnagramsInterface {
    * List(('a', 1), ('e', 1), ('t', 1)) -> Seq("ate", "eat", "tea")
    *
    */
-  lazy val dictionaryByOccurrences: Map[Occurrences, List[Word]] = (dictionary.groupBy(word => wordOccurrences(word))).withDefaultValue(List())
+  lazy val dictionaryByOccurrences: Map[Occurrences, List[Word]] =
+    (dictionary.groupBy(word => wordOccurrences(word))).withDefaultValue(List())
 
   /** Returns all the anagrams of a given word. */
-  def wordAnagrams(word: Word): List[Word] = dictionaryByOccurrences(wordOccurrences(word))
+  def wordAnagrams(word: Word): List[Word] =
+    dictionaryByOccurrences(wordOccurrences(word))
 
   /** Returns the list of all subsets of the occurrence list.
    * This includes the occurrence itself, i.e. `List(('k', 1), ('o', 1))`
@@ -89,7 +91,27 @@ object Anagrams extends AnagramsInterface {
    * Note that the order of the occurrence list subsets does not matter -- the subsets
    * in the example above could have been displayed in some other order.
    */
-  def combinations(occurrences: Occurrences): List[Occurrences] = ???
+  def combinations(occurrences: Occurrences): List[Occurrences] = {
+    val singles = (for {
+      (char, count) <- occurrences
+      i <- 1 until count + 1
+    } yield (char, i))
+      .groupBy(item => item._1)
+      .toList
+      .map(item => item._2)
+
+    println(singles)
+
+    val combos = for {
+      x <- singles.head
+      y <- singles.tail.head
+      if x._1 != y._1
+    } yield List(x,y)
+
+    println(combos)
+    combos.concat(singles).concat(List())
+
+  }
 
   /** Subtracts occurrence list `y` from occurrence list `x`.
    *
