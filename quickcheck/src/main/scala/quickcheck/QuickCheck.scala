@@ -44,12 +44,49 @@ abstract class QuickCheckHeap extends Properties("Heap") with IntHeap {
     mkList(h) == mkList(h).sorted
   }
 
+  property("deleteMin") = forAll { (h: H) =>
+    def mkList(h: H): List[Int] =
+      if (isEmpty(h)) List()
+      else findMin(h) :: mkList(deleteMin(h))
+
+    def traverse(lst: List[Int], h: H): Boolean =
+      if (lst.isEmpty) true
+      else lst.head == findMin(h) && traverse(lst.tail, deleteMin(h))
+
+    traverse(mkList(h), h)
+
+  }
+
+  property("delete and reconstruct") = forAll { (h: H) =>
+    def mkList(h: H): List[Int] =
+      if (isEmpty(h)) List()
+      else findMin(h) :: mkList(deleteMin(h))
+
+    val lst = mkList(h)
+    val hp = lst.foldRight(empty)((acc, cur) => insert(acc, cur))
+    val lstP = mkList(hp)
+    lstP == lst
+  }
+
   property("meld") = forAll { (h1: H, h2: H) =>
     val min1 = findMin(h1)
     val min2 = findMin(h2)
     val m = meld(h1, h2)
     val minMeld = findMin(m)
     minMeld == min1 || minMeld == min2
+  }
+
+  property("meld min") = forAll { (h1: H, h2: H) =>
+    val min1 = findMin(h1)
+    val min2 = findMin(h2)
+    val m = meld(h1, h2)
+    val minMeld = findMin(m)
+    minMeld == math.min(min1, min2)
+  }
+
+  property("meld empties") = forAll { (h1: H, h2: H) =>
+    val m = meld(empty, empty)
+    isEmpty(m)
   }
 
 }
