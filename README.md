@@ -17,3 +17,7 @@
 - https://github.com/frankh/coursera-scala
 - https://github.com/alexilyenko/Functional-Scala
 - https://github.com/xiaoyunyang/coursera-scala-specialization
+
+### Course 2 - Functional Program Design in Scala
+
+- [Assignment 1 - Quickcheck](./quickcheck/src/main/scala/quickcheck/QuickCheck.scala)
