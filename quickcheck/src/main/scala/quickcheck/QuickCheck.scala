@@ -44,7 +44,7 @@ abstract class QuickCheckHeap extends Properties("Heap") with IntHeap {
     mkList(h) == mkList(h).sorted
   }
 
-  property("deleteMin") = forAll { (h: H) =>
+  property("deleteMin iteratively") = forAll { (h: H) =>
     def mkList(h: H): List[Int] =
       if (isEmpty(h)) List()
       else findMin(h) :: mkList(deleteMin(h))
@@ -63,7 +63,15 @@ abstract class QuickCheckHeap extends Properties("Heap") with IntHeap {
     findMin(deleteMin(h)) == math.max(a, b)
   }
 
-  property("delete and reconstruct") = forAll { (h: H) =>
+  property("insert greater than min, deleteMin, compare") = forAll { (a: Int) =>
+    val b = a + 1
+    val h = insert(b + 2, insert(b, insert(b + 1, empty)))
+    val hp = deleteMin(h)
+    hp == insert(b + 1, insert(b + 2, empty))
+  }
+
+
+  property("deleteMin and reconstruct") = forAll { (h: H) =>
     def mkList(h: H): List[Int] =
       if (isEmpty(h)) List()
       else findMin(h) :: mkList(deleteMin(h))
