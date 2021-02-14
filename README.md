@@ -19,6 +19,7 @@
 ## Course 2 - Functional Program Design in Scala
 
 - [Assignment 1 - Quickcheck](./quickcheck/src/main/scala/quickcheck/QuickCheck.scala)
+- [Assignment 2 - Streams](./streams/src/main/scala/streams)
 
 ### Resources
 
