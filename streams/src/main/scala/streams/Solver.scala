@@ -71,18 +71,36 @@ trait Solver extends GameDef {
    * construct the correctly sorted lazy list.
    */
   def from(initial: LazyList[(Block, List[Move])],
-           explored: Set[Block]): LazyList[(Block, List[Move])] = ???
+           explored: Set[Block]): LazyList[(Block, List[Move])] =
+
+    if (initial.isEmpty) LazyList.empty
+    else {
+      val head = initial.head
+      val neighbors = neighborsWithHistory(head._1, head._2)
+      val newNeighbors = newNeighborsOnly(neighbors, explored)
+      val newBlocks = newNeighbors map (n => n._1)
+      head #:: from(initial.tail ++ newNeighbors, explored ++ newBlocks)
+    }
+
 
   /**
    * The lazy list of all paths that begin at the starting block.
    */
-  lazy val pathsFromStart: LazyList[(Block, List[Move])] = ???
+  lazy val pathsFromStart: LazyList[(Block, List[Move])] = {
+    val initial = LazyList((startBlock, List()))
+    val explored = Set(startBlock)
+    from(initial, explored)
+  }
 
   /**
    * Returns a lazy list of all possible pairs of the goal block along
    * with the history how it was reached.
    */
-  lazy val pathsToGoal: LazyList[(Block, List[Move])] = ???
+  lazy val pathsToGoal: LazyList[(Block, List[Move])] =
+    for {
+      path <- pathsFromStart
+      if done(path._1)
+    } yield path
 
   /**
    * The (or one of the) shortest sequence(s) of moves to reach the
@@ -92,5 +110,6 @@ trait Solver extends GameDef {
    * the first move that the player should perform from the starting
    * position.
    */
-  lazy val solution: List[Move] = ???
+  lazy val solution: List[Move] = if (pathsToGoal.isEmpty) List.empty
+  else (pathsToGoal map (p => p._2)).head.reverse
 }
