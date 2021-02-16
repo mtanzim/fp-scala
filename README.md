@@ -20,6 +20,7 @@
 
 - [Assignment 1 - Quickcheck](./quickcheck/src/main/scala/quickcheck/QuickCheck.scala)
 - [Assignment 2 - Streams](./streams/src/main/scala/streams)
+- [Assignment 3 - Type Directed Programming](./codecs/src/main/scala/codecs/codecs.scala)
 
 ### Resources
 
