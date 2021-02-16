@@ -24,3 +24,4 @@
 ### Resources
 
 - https://github.com/ncolomer/coursera
+- https://github.com/glebd/scala-course
