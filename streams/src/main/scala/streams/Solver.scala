@@ -70,6 +70,8 @@ trait Solver extends GameDef {
    * of different paths - the implementation should naturally
    * construct the correctly sorted lazy list.
    */
+
+  // NOTE: FP Implementation of BFS
   def from(initial: LazyList[(Block, List[Move])],
            explored: Set[Block]): LazyList[(Block, List[Move])] =
 
