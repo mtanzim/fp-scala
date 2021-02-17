@@ -93,6 +93,8 @@ trait EncoderInstances {
 
   /** An encoder for `Boolean` values */
   // TODO Define an implicit value of type `Encoder[Boolean]`
+  implicit val boolEncoder: Encoder[Boolean] =
+  Encoder.fromFunction(b => Json.Bool(b))
 
   /**
    * Encodes a list of values of type `A` into a JSON array containing
@@ -196,7 +198,7 @@ trait DecoderInstances {
   /** A decoder for `Int` values. Hint: use the `isValidInt` method of `BigDecimal`. */
   // TODO Define an implicit value of type `Decoder[Int]`
 
-  implicit val intDecoder: Decoder[Int] = Decoder.fromFunction[Int]((n: Json) => n match {
+  implicit val intDecoder: Decoder[Int] = Decoder.fromFunction((n: Json) => n match {
     case Json.Num(num) => if (num.isValidInt) Some(num.toInt) else None
     case _ => None
   })
@@ -206,7 +208,13 @@ trait DecoderInstances {
   implicit def strDecoder: Decoder[String] = Decoder.fromPartialFunction { case Json.Str(s) => s.toString }
 
   /** A decoder for `Boolean` values */
-  // TODO Define an implicit value of type `Decoder[Boolean]`
+  //  implicit val boolDecoder: Decoder[Boolean] = Decoder.fromFunction[Boolean]((b: Json) => b match {
+  //    case Json.Bool(value) => Some(value.booleanValue())
+  //    case _ => None
+  //  })
+  implicit val boolDecoder: Decoder[Boolean] = Decoder.fromPartialFunction {
+    case Json.Bool(value) => value.booleanValue()
+  }
 
   /**
    * A decoder for JSON arrays. It decodes each item of the array
@@ -214,9 +222,10 @@ trait DecoderInstances {
    * if all the JSON array items are successfully decoded.
    */
   implicit def listDecoder[A](implicit decoder: Decoder[A]): Decoder[List[A]] =
-    Decoder.fromFunction {
-      ???
-    }
+    Decoder.fromFunction (as => as match {
+      case Json.Arr(items) => Some(items.map(decoder.decode).flatten)
+      case _ => None
+    })
 
   /**
    * A decoder for JSON objects. It decodes the value of a field of
