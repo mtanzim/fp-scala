@@ -103,6 +103,10 @@ trait EncoderInstances {
   implicit def listEncoder[A](implicit encoder: Encoder[A]): Encoder[List[A]] =
     Encoder.fromFunction(as => Json.Arr(as.map(encoder.encode)))
 
+  implicit def personEncoder: Encoder[Person] = {
+    Person.personEncoder
+  }
+
 }
 
 /**
@@ -222,7 +226,7 @@ trait DecoderInstances {
    * if all the JSON array items are successfully decoded.
    */
   implicit def listDecoder[A](implicit decoder: Decoder[A]): Decoder[List[A]] =
-    Decoder.fromFunction (as => as match {
+    Decoder.fromFunction(as => as match {
       case Json.Arr(items) => Some(items.map(decoder.decode).flatten)
       case _ => None
     })
@@ -232,7 +236,14 @@ trait DecoderInstances {
    * the supplied `name` using the given `decoder`.
    */
   def field[A](name: String)(implicit decoder: Decoder[A]): Decoder[A] =
-    ???
+    Decoder.fromFunction(a => a match {
+      case Json.Obj(field) => decoder.decode(field(name))
+      case _ => None
+    })
+
+  implicit def personDecoder: Decoder[Person] = {
+    Person.personDecoder
+  }
 
 }
 
@@ -250,7 +261,9 @@ trait PersonCodecs {
 
   /** The corresponding decoder for `Person` */
   implicit val personDecoder: Decoder[Person] =
-    ???
+    Decoder.field[String]("name")
+      .zip(Decoder.field[Int]("age"))
+      .transform[Person](person => Person(person._1, person._2))
 
 }
 
