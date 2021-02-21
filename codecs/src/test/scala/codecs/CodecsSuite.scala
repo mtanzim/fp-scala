@@ -8,7 +8,7 @@ import org.junit.Test
 class CodecsSuite
   extends EncoderInstances with TestEncoders
     with DecoderInstances with TestDecoders
-//    with PersonCodecs
+    with PersonCodecs
     with ContactsCodecs {
 
   def checkProperty(prop: Prop): Unit = {
