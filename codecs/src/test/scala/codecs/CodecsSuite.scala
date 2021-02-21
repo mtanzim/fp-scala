@@ -90,6 +90,7 @@ class CodecsSuite
     val json = Json.Obj(Map("people" ->
       Json.Arr(List(Json.Obj(Map("name" -> Json.Str("Alice"), "age" -> Json.Num(42)))))
     ))
+    println(json)
     val encoder = implicitly[Encoder[Contacts]]
     assert(encoder.encode(contacts) == json)
   }

@@ -1,7 +1,5 @@
 package codecs
 
-import codecs.Contacts.contactEncoder
-import codecs.Person.personEncoder
 
 /**
  * A data type modeling JSON values.
@@ -243,10 +241,6 @@ trait DecoderInstances {
       case _ => None
     })
 
-  //  implicit def personDecoder: Decoder[Person] = {
-  //    Person.personDecoder
-  //  }
-
 }
 
 case class Person(name: String, age: Int)
@@ -282,7 +276,7 @@ trait ContactsCodecs {
 
   implicit def contactDecoder: Decoder[Contacts] = {
     Decoder.field[Contacts]("people")(Decoder.listDecoder[Person]
-      .transform(lst => Contacts(lst)))
+      .transform(people => Contacts(people)))
   }
 
   // TODO Define the encoder and the decoder for `Contacts`
@@ -306,12 +300,18 @@ object Main {
     val maybeJsonString = parseJson(""" "foo" """)
     val maybeJsonObj = parseJson(""" { "name": "Alice", "age": 42 } """)
     val maybeJsonObj2 = parseJson(""" { "name": "Alice", "age": "42" } """)
+    val maybeJsonObj3 = parseJson(""" { "people": [ { "name": "Alice", "age": "42" }, { "name": "Mark", "age": "22" } ] } """)
     //     Uncomment the following lines as you progress in the assignment
     println(maybeJsonString.flatMap(_.decodeAs[Int]))
     println(maybeJsonString.flatMap(_.decodeAs[String]))
     println(maybeJsonObj.flatMap(_.decodeAs[Person]))
     println(maybeJsonObj2.flatMap(_.decodeAs[Person]))
     println(renderJson(Person("Bob", 66)))
+
+    println(parseAndDecode[List[Person]](renderJson(List(Person("Bob", 66), Person("Alice", 44)))))
+    println(maybeJsonObj3)
+    println(maybeJsonObj3.flatMap(_.decodeAs[Contacts]))
+
   }
 
 }
