@@ -26,3 +26,7 @@
 
 - https://github.com/ncolomer/coursera
 - https://github.com/glebd/scala-course
+
+## Course 3 - [Programming Reactive Systems](https://www.coursera.org/learn/scala-akka-reactive)
+
+- [Assignment 1 - Programming with Futures](./async/src/main/scala/async/Async.scala)
