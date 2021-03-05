@@ -11,7 +11,12 @@ final case class Divide(a: Expr, b: Expr) extends Expr
 object Calculator extends CalculatorInterface {
   def computeValues(
       namedExpressions: Map[String, Signal[Expr]]): Map[String, Signal[Double]] = {
-    ???
+
+    val refs = for {
+      (k,v) <- namedExpressions
+    } yield (k, getReferenceExpr(k,namedExpressions))
+    println(refs)
+    Map.empty
   }
 
   def eval(expr: Expr, references: Map[String, Signal[Expr]]): Double = {
