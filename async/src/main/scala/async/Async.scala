@@ -2,7 +2,7 @@ package async
 
 import scala.concurrent.{Future, Promise}
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.Try
+import scala.util.{Success, Try}
 import scala.util.control.NonFatal
 
 object Async extends AsyncInterface {
@@ -36,10 +36,14 @@ object Async extends AsyncInterface {
     * second asynchronous computations, paired together.
     */
   def sequenceComputations[A, B](
-    makeAsyncComputation1: () => Future[A],
-    makeAsyncComputation2: () => Future[B]
-  ): Future[(A, B)] =
-    ???
+                                  makeAsyncComputation1: () => Future[A],
+                                  makeAsyncComputation2: () => Future[B]
+                                ): Future[(A, B)] =
+  //    makeAsyncComputation1().flatMap(res1 => makeAsyncComputation2().map(res2 => (res1, res2)))
+    for {
+      a <- makeAsyncComputation1()
+      b <- makeAsyncComputation2()
+    } yield (a, b)
 
   /**
     * Concurrently perform two asynchronous computations and pair their successful
@@ -48,10 +52,9 @@ object Async extends AsyncInterface {
     * If one of them fails, this method should return the failure.
     */
   def concurrentComputations[A, B](
-    makeAsyncComputation1: () => Future[A],
-    makeAsyncComputation2: () => Future[B]
-  ): Future[(A, B)] =
-    ???
+                                    makeAsyncComputation1: () => Future[A],
+                                    makeAsyncComputation2: () => Future[B]
+                                  ): Future[(A, B)] = makeAsyncComputation1() zip makeAsyncComputation2()
 
   /**
     * Attempt to perform an asynchronous computation.
@@ -60,7 +63,13 @@ object Async extends AsyncInterface {
     * are eventually performed.
     */
   def insist[A](makeAsyncComputation: () => Future[A], maxAttempts: Int): Future[A] =
-    ???
+    makeAsyncComputation().recoverWith { case e => {
+      if (maxAttempts == 1) {
+        throw e
+      }
+      insist(makeAsyncComputation, maxAttempts - 1)
+    }
+    }
 
   /**
     * Turns a callback-based API into a Future-based API
