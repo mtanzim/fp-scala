@@ -3,7 +3,7 @@
   */
 package actorbintree
 
-import actorbintree.BinaryTreeSet.Insert
+import actorbintree.BinaryTreeSet.{Contains, ContainsResult, Insert}
 import akka.actor.*
 
 import scala.collection.immutable.Queue
@@ -69,6 +69,7 @@ class BinaryTreeSet extends Actor :
   /** Accepts `Operation` and `GC` messages. */
   val normal: Receive = {
     case Insert(requester, id, elem) => root ! Insert(self, id, elem)
+    case Contains(requester, id, elem) => root ! Contains(self, id, elem)
   }
 
   // optional
@@ -112,6 +113,27 @@ class BinaryTreeNode(val elem: Int, initiallyRemoved: Boolean)extends Actor :
   // optional
   /** Handles `Operation` messages and `CopyTo` requests. */
   val normal: Receive = {
+    case Contains(requester, id, newElem) => {
+      if (newElem < elem) {
+        subtrees.get(Left) match {
+          case Some(st) =>  st ! Contains(self, id, newElem)
+          case None => {
+            requester ! ContainsResult(id, false)
+          }
+        }
+      }
+      else if (newElem > elem) {
+        subtrees.get(Right) match {
+          case Some(st) => st ! Contains(self, id, newElem)
+          case None => {
+            requester ! ContainsResult(id, false)
+          }
+        }
+      }
+      else {
+        requester ! ContainsResult(id, !removed)
+      }
+    }
     case Insert(requester, id, newElem) => {
       if (newElem < elem) {
         subtrees.get(Left) match {

@@ -15,7 +15,7 @@ package actorbintree:
     // which breaks TestKitBase
     Impl()
     class Impl
-        extends TestKit(ActorSystem("BinaryTreeSuite"))~
+        extends TestKit(ActorSystem("BinaryTreeSuite"))
         with ImplicitSender:
 
       import actorbintree.BinaryTreeSet.*
